@@ -1,0 +1,2 @@
+# Prevent checkpoints from being checked into the repository
+.ipynb_checkpoints
