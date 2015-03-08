@@ -10,3 +10,7 @@ A collaborative team project for UT Austin's <a href="http://www.ideal.ece.utexa
 - Hua Zhong
 - Vince Kim
 - David Liu
+
+##Project Folders
+- *data*—contains the competition data from the Kaggle competition
+- *preprocessing*—IPython Notebook documentation on the team's standard method of preprocessing the competition data
