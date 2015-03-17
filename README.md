@@ -14,6 +14,7 @@ A collaborative team project for UT Austin's <a href="http://www.ideal.ece.utexa
 ##Project Folders
 - *data*—contains the competition data from the Kaggle competition
 - *preprocessing*—IPython Notebook documentation on the team's standard method of preprocessing the competition data
+- *models*—contains various model technqiues to solve the classification problem for *random acts of pizza*
 
 ##Environment Setup
 You can use whatever development environment you would like, but it is recommended that you at least use anaconda as the basis for this project. There are several benefits to this approach:
