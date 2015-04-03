@@ -1,42 +1,31 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.classify import NaiveBayesClassifier
+from features.ngram_feature_set import NGramFeatureSet
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import cross_validation
 
-def extractFeatures(document):
-    documentWords = set(word_tokenize(document))
-    features = {}
-    for word in allWords:
-        features['contains (%s)' % word] = (word in documentWords)
-    return features
+# in order to run me, call me from the root of the project like so:
+# python -m models.naive_bayes
 
-def extractFeaturesAndLabel(dataItem):
-    return (extractFeatures(dataItem['request_text']), dataItem['requester_received_pizza'])
+featureSet = NGramFeatureSet()
+X = featureSet.smartLoad("data_cache/unigrams.npa", binary = True, lowercase = True, ngram_range = (1, 1))
+X1 = featureSet.smartLoad("data_cache/bigrams.npa", binary = True, lowercase = True, ngram_range = (2, 2))
+X2 = featureSet.smartLoad("data_cache/multigrams.npa", binary = True, lowercase = True, ngram_range = (1, 2))
 
-# necessary for the word tokenizer
-nltk.download('punkt')
+pizza_data = pd.read_json('data/train.json')
+y = pizza_data['requester_received_pizza']
 
-# Import the datasets via the read_json method from pandas
-pizza_data = pd.read_json('../data/train.json')
+nb = MultinomialNB()
 
-# the test set doesn't have the 'request_text' columns or the 'requester_received_pizza', so I'm not using it
-#pizza_data_test = pd.read_json('../data/test.json')[:20]
+nb.fit(X, y)
+scores = cross_validation.cross_val_score(nb, X, y, cv = 10)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
-allWords = set()
-for document in pizza_data['request_text']:
-    for word in word_tokenize(document):
-        allWords.add(word)
+nb.fit(X1, y)
+scores = cross_validation.cross_val_score(nb, X1, y, cv = 10)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
-# Tweak these values as desired. Be careful though, this model uses a lot of memory!
-trainingSize = 500
-testSize = int(trainingSize * 0.1)
-
-pizza_data_train = pizza_data[0:trainingSize].apply(extractFeaturesAndLabel, axis=1)
-pizza_data_test = pizza_data[trainingSize:trainingSize + testSize].apply(extractFeaturesAndLabel, axis=1)
-
-classifier = NaiveBayesClassifier.train(pizza_data_train)
-
-print classifier.show_most_informative_features()
-print "Model Accuracy: %f" % nltk.classify.accuracy(classifier, pizza_data_test)
+nb.fit(X2, y)
+scores = cross_validation.cross_val_score(nb, X2, y, cv = 10)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))

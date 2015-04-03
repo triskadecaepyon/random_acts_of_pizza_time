@@ -61,5 +61,7 @@ dependencies:
 - zlib=1.2.8=0
 - pip:
   - backports.ssl-match-hostname==3.4.0.2
+  - lda==1.0.2
+  - pbr==0.10.8
   - python-dateutil==2.4.1
 
