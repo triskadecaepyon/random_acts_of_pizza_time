@@ -17,6 +17,9 @@ A collaborative team project for UT Austin's <a href="http://www.ideal.ece.utexa
 - *models*—contains various model technqiues to solve the classification problem for *random acts of pizza*
 - *features*—contains derived or processed features via NLP, binarization, and other methods for model assistance
 
+##Data explorations and findings
+- *Feature Wiki*—<a href="https://github.com/triskadecaepyon/random_acts_of_pizza_time/wiki/Feature-Breakdown">Explorations on the data, transformations applied, and additional findings from the dataset.</a>
+
 ##Environment Setup
 You can use whatever development environment you would like, but it is recommended that you at least use anaconda as the basis for this project. There are several benefits to this approach:
 - it is simple to get started
