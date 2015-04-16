@@ -16,6 +16,7 @@ A collaborative team project for UT Austin's <a href="http://www.ideal.ece.utexa
 - *preprocessing*—IPython Notebook documentation on the team's standard method of preprocessing the competition data
 - *models*—contains various model technqiues to solve the classification problem for *random acts of pizza*
 - *features*—contains derived or processed features via NLP, binarization, and other methods for model assistance
+- *NLPFeatureExtraction*—contains source code of NLP feature extraction in Java
 
 ##Data explorations and findings
 - *Feature Wiki*—<a href="https://github.com/triskadecaepyon/random_acts_of_pizza_time/wiki/Feature-Breakdown">Explorations on the data, transformations applied, and additional findings from the dataset.</a>
