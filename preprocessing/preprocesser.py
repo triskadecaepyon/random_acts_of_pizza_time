@@ -15,10 +15,10 @@ def reddit_pre_process_strategy(training_data_frame):
     # Process textual data with NLP
     # Binarize some of the continuous data
     return_frame = reddit_roap_convert_unix_time(return_frame)
-    return_frame = reddit_roap_convert_hours_to_categories(return_frame)
+    # return_frame = reddit_roap_convert_hours_to_categories(return_frame)
     # return_frame = reddit_roap_convert_region(return_frame)
     return_frame = return_frame.drop('unix_timestamp_of_request', 1)
-    return_frame = return_frame.drop('unix_timestamp_of_request_utc', 1)
+    # return_frame = return_frame.drop('unix_timestamp_of_request_utc', 1)
     return return_frame
 
 
@@ -50,12 +50,12 @@ def reddit_roap_convert_unix_time(training_data_frame):
     Used to convert the unix time stamps into hours, and replace the dataframe with hours instead.
     """
     converted_frame = []
-    for val in xrange(0, len(training_data_frame.unix_timestamp_of_request)):
+    for val in range(0, len(training_data_frame.unix_timestamp_of_request)):
         converted_frame.append(reddit_unix_time_convert_hour(training_data_frame.unix_timestamp_of_request[val]))
     training_data_frame.unix_timestamp_of_request = pd.DataFrame(converted_frame)
     
     converted_frame = []
-    for val in xrange(0, len(training_data_frame.unix_timestamp_of_request_utc)):
+    for val in range(0, len(training_data_frame.unix_timestamp_of_request_utc)):
         converted_frame.append(reddit_unix_time_convert_hour(training_data_frame.unix_timestamp_of_request_utc[val]))
     training_data_frame.unix_timestamp_of_request_utc = pd.DataFrame(converted_frame)
 
@@ -68,7 +68,7 @@ def reddit_roap_convert_hours_to_categories(training_data_frame):
     Note that the time_of_day is a categorical series in the dataframe
     """
     converted_frame = []
-    for val in xrange(0, len(training_data_frame.unix_timestamp_of_request)):
+    for val in range(0, len(training_data_frame.unix_timestamp_of_request)):
         # converted_frame.append(reddit_unix_time_convert_hour(training_data_frame.unix_timestamp_of_request[val]))
         hour = training_data_frame.unix_timestamp_of_request[val]
         if hour < 9:
@@ -97,10 +97,10 @@ def reddit_roap_convert_region(training_data_frame):
     """
     converted_frame = []
 
-    for val in xrange(0, len(training_data_frame.unix_timestamp_of_request)):
+    for val in range(0, len(training_data_frame.unix_timestamp_of_request)):
         # Warning: shift of 6 is applied to attempt to correct the UTC time zone
         converted_frame.append(training_data_frame.unix_timestamp_of_request_utc[val] -
                                training_data_frame.unix_timestamp_of_request[val]-6)
     training_data_frame['utcoffset'] = pd.DataFrame(converted_frame)
-    #print training_data_frame.utcoffset.unique()
+    # print training_data_frame.utcoffset.unique()
     return training_data_frame
