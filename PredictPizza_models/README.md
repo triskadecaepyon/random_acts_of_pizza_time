@@ -2,8 +2,8 @@
 
 
 
-### Module1: Decision Tree
+### Module1: Logistic Regression
 
-### Module2: SVM
+### Module2: Random Forest
 
 ### Module3: PCA
