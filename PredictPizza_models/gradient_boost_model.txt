@@ -1,0 +1,17 @@
+
+Call:
+roc.default(response = train_testing$requester_received_pizza,     predictor = mean_predict)
+
+Data: mean_predict in 1523 controls (train_testing$requester_received_pizza fail) < 497 cases (train_testing$requester_received_pizza success).
+Area under the curve: 0.6244
+d_before  9.2894975
+de_job                         de_job  3.7266598
+de_family                   de_family  3.6107731
+de_craving                 de_craving  3.2168256
+de_student                 de_student  3.1493636
+hyperlink                   hyperlink  2.2448240
+reciprocity               reciprocity  2.1181661
+month_part                 month_part  1.5735193
+gratitude                   gratitude  1.4219262
+sentiment_positive sentiment_positive  0.7915072
+sentiment_negative sentiment_negative  0.5932222
