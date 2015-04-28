@@ -18,7 +18,7 @@ NOT_LEET = -1337.0
 # Utility function to report best scores
 def reportNBest(grid_scores, classifier, X_train, y_train, X_test, y_test, scoring_function, n_best):
     topScores = sorted(grid_scores, key=itemgetter(1), reverse=True)[:n_best]
-    usefulModelResults = [] # A useful model is one that does better than random => matthew_coeff > 0
+    veryBestModel = None
     for i, score in enumerate(topScores):
         if score.mean_validation_score <= 0.0:
             break # No need to look at anymore models
@@ -30,11 +30,12 @@ def reportNBest(grid_scores, classifier, X_train, y_train, X_test, y_test, scori
         print("Parameters: {0}".format(parameters))
         
         classifier = base.clone(classifier)
+        if not veryBestModel:
+            veryBestModel = classifier
         classifier.set_params(**parameters)
 
         classifier.fit(X_train, y_train)
         y_pred = classifier.predict(X_test)
-        usefulModelResults.append(y_pred)
 
         if scoring_function:
             print("Test score: %.3f" % scoring_function(y_test, y_pred))
@@ -46,10 +47,10 @@ def reportNBest(grid_scores, classifier, X_train, y_train, X_test, y_test, scori
         target_names = ['no_pizza', 'pizza']
         print(classification_report(y_test, y_pred, target_names=target_names))
 
-    if not usefulModelResults:
+    if not veryBestModel:
         print("No useful models found!")
 
-    return usefulModelResults
+    return veryBestModel
 
 # helper function for separateModelStepsAndParameters
 def flattenParametersWithNamespace(parameters, namespace):
@@ -93,7 +94,7 @@ def runModel(
     n_best = 3,
     verbose = False
 ):
-    classifierName = modelSteps[-1].__class__.__name__
+    classifierName = modelSteps[-1][1].__class__.__name__
     classifier = Pipeline(modelSteps)
 
     print("Running randomized parameter search on %s" % classifierName)
@@ -121,11 +122,8 @@ def runModel(
     gridScores = parameterSearcher.grid_scores_
     print("Randomized search took %.2f seconds for %d candidates parameter settings." % (totalTime, len(gridScores)))
     print("Printing %d best models" % n_best)
-    reportNBest(gridScores, classifier, X_train, y_train, X_test, y_test, scoring_function, n_best)
+    veryBestModel = reportNBest(gridScores, classifier, X_train, y_train, X_test, y_test, scoring_function, n_best)
     print("Finished with %s" % classifierName)
-    print("")
-    print("")
-    print("")
-    print("")
+    return veryBestModel
     # picklize me, Captain!
     ### END OUTPUT RESULTS ###

@@ -23,7 +23,7 @@ from sklearn.pipeline import Pipeline
 np.random.seed(1337)
 
 removeRecordsWithZeroLengthRequests = False
-useEqualNumberOfPositiveAndNegativeResults = False
+useEqualNumberOfPositiveAndNegativeResults = True
 useStratifiedSplit = False
 
 ### LOAD DATA ###
@@ -153,9 +153,9 @@ bestModel = model_runner.runModel(
     modelParameters, 
     modelData,
     scoring_function = matthews_corrcoef,
-    n_search_iters = 100,
+    n_search_iters = 5,
     n_best = 10,
-    cv = StratifiedKFold(modelData[2], n_folds=5),
+    cv = 5, #StratifiedKFold(modelData[2], n_folds=5),
     verbose = True
 ) 
 
