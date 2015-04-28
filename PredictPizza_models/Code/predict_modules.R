@@ -20,7 +20,7 @@ train_select_data$posted_before <- as.numeric(train_select_data$posted_before) -
 save(train_select_data, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/train_select_data.Rdata')
 
 set.seed(2014)
-train_indictor <- createDataPartition(train_select$requester_received_pizza, p = .75, list = F)
+train_indictor <- createDataPartition(train_select$requester_received_pizza, p = .50, list = F)
 train_training <- train_select[train_indictor, ]
 train_testing <- train_select[-train_indictor, ]
 train_training_data <- train_select_data[train_indictor, ]
@@ -45,11 +45,11 @@ sink()
 logit_inf <- varImp(logistic_regression_model)
 save(logistic_regression_model, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/logit_model.Rdata')
 
-# Model 2: gradient boot model (n.trees = 500, interaction.depth = 3, shrinkage = .01, roc = .68)
-gradient_boost_tune = expand.grid(interaction.depth = seq(1, 11, 2),
+# Model 2: Granient Boost Trees (n.trees = 500, interaction.depth = 3, shrinkage = .01, roc = .68)
+sink('/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/gradient_boost_model.txt')
+gradient_boost_tune = expand.grid(interaction.depth = seq(1, 9, 2),
                        n.trees = seq(500, 2000, 500),
                        shrinkage = c(.01, .1))
-sink('/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/gradient_boost_model.txt')
 set.seed(2014)
 gradient_boost_model <- train(x = train_training[, indicator_variables], y = train_training$requester_received_pizza,
               method = 'gbm', tuneGrid = gradient_boost_tune,
@@ -78,15 +78,13 @@ plot_inf <- function(x) {
     ggtitle(x[[2]]) + theme_bw() + guides(fill = F)
   return(plot)
 }
-
 p_logit_inf <- plot_inf(logit_inf)
 p_gbm_inf <- plot_inf(ggradient_boost_inf)
 grid.arrange(p_logit_inf, p_gbm_inf, main = 'Variable Influence')
-
 # Predict
-logit_predict = predict(logistic_regression_model, train_testing[, indicator_variables], type = 'prob')
-gbm_predict = predict(gradient_boost_model, train_testing[, indicator_variables], type = 'prob')
-mean_predict = (logit_predict$success + gbm_predict$success) / 2
+logit_predict <- predict(logistic_regression_model, train_testing[, indicator_variables], type = 'prob')
+gbm_predict <- predict(gradient_boost_model, train_testing[, indicator_variables], type = 'prob')
+mean_predict <- (logit_predict$success + gbm_predict$success) / 2
 roc(train_testing$requester_received_pizza, mean_predict)
 
 
