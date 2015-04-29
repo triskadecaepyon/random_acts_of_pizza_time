@@ -173,9 +173,9 @@ for (i in 1:length(successful_titles)){
   n_successful_titles[[i]] <- unlist(strsplit(as.vector(successful_titles[i]), " "))
 }
 
-total_successful_title_words = unlist(n_successful_titles)
-total_successful_title_words = gsub('[^[:alpha:]]', ' ', total_successful_title_words)
-total_successful_title_words = tolower(total_successful_title_words)
+total_successful_title_words <- unlist(n_successful_titles)
+total_successful_title_words <- gsub('[^[:alpha:]]', ' ', total_successful_title_words)
+total_successful_title_words <- tolower(total_successful_title_words)
 total_successful_title_words_table_df <- data.frame(table(total_successful_title_words))
 total_successful_title_words_table_df <- total_successful_title_words_table_df[order(total_successful_title_words_table_df$Freq),]
 # OK ABOVE
@@ -216,9 +216,9 @@ words_page <- readLines("/Users/zdai/Desktop/UT/random_acts_of_pizza_time/Predic
 common_words <- words_page[1:500]
 
 for (i in 1:length(common_words)){
-  common_words[i] = strsplit(common_words[i], "<")[[1]][1]
+  common_words[i] <- strsplit(common_words[i], "<")[[1]][1]
 }
-common_words = c(common_words, "i","is", "a", "on", "to", "in", "of","the", "and", "Pizza", "pizza", "Pizza:","pizza.", "[Request]", "[REQUEST]", "[request]", "-", "edit:")
+common_words <- c(common_words, "i","is", "a", "on", "to", "in", "of","the", "and", "Pizza", "pizza", "Pizza:","pizza.", "[Request]", "[REQUEST]", "[request]", "-", "edit:")
 total_successful_body_words_table_df <- total_successful_body_words_table_df[-which(total_successful_body_words_table_df$total_successful_body_words %in% common_words),]
 total_successful_body_words_table_df <- total_successful_body_words_table_df[order(total_successful_body_words_table_df$Freq),]
 body_wordcloud <- Corpus(VectorSource(total_successful_body_words_table_df$total_successful_body_words))
@@ -233,7 +233,7 @@ total_successful_body_words_len <- unlist(lapply(total_successful_body_words, le
 successful_body_words_noun <- list()
 
 for (i in 1:length(total_successful_body_words)) {
-  successful_body_words_noun[[i]] = total_successful_body_words[[i]]
+  successful_body_words_noun[[i]] <- total_successful_body_words[[i]]
 }
 
 # paste back to corpus
