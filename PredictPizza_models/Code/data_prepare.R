@@ -163,13 +163,6 @@ total_attention <- train_df_frame$requester_upvotes_plus_downvotes_at_retrieval 
 total_attention_df <- data.frame(total_attention, train_df_frame$requester_received_pizza)
 plot(total_attention_df$total_attention, total_attention_df$train_df_frame.requester_received_pizza)
 
-#######################################################################
-#######################################################################
-#######################################################################
-
-#The strategy going forward will be to seperate out the requests into successful and unsuccessful
-#and then build up frequency tables of each.
-#######################################################################
 #Titles text mining.
 # Get corpus from request title
 successful_requests <- train_df_frame[which(train_df_frame$requester_received_pizza == TRUE),]
