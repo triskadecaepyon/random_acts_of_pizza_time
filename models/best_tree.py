@@ -23,11 +23,11 @@ from sklearn.pipeline import Pipeline
 np.random.seed(1337)
 
 removeRecordsWithZeroLengthRequests = False
-useEqualNumberOfPositiveAndNegativeResults = True
+useEqualNumberOfPositiveAndNegativeResults = False
 useStratifiedSplit = False
 
 ### LOAD DATA ###
-pizza_data = pd.read_json('data/train.json')
+pizza_data = pd.read_json('data/equalized_train_without_forced_ascii.json')
 X = pizza_data
 y = np.array(pizza_data['requester_received_pizza'])
 
