@@ -25,7 +25,7 @@ request_word <- lapply(request_word, lapply, function(x) paste0(' ', x))
 request_word <- lapply(request_word, unlist)
 
 count_freq <- function(x, categories) {
-  l = length(grep(categories, x))
+  l <- length(grep(categories, x))
   return(l / length(x))
 }
 

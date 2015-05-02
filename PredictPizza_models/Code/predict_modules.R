@@ -7,8 +7,6 @@ library(pROC)
 load(file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/train_select.Rdata')
 levels(train_select$requester_received_pizza) <- list('fail' = FALSE, 'success' = TRUE)
 save(train_select, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/train_select2.Rdata')
-
-# Convert numeric data into integer and center data for regularization
 train_select_data <- train_select
 train_select_data$month_part <- as.numeric(train_select_data$month_part) - 1
 train_select_data$gratitude <- as.numeric(train_select_data$gratitude) - 1
@@ -35,8 +33,7 @@ save(train_testing_data, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_tim
 indicator_variables <- names(train_training)[1:length(train_training)-1]
 train_control <- trainControl(method = 'cv', summaryFunction = twoClassSummary, classProbs = T)
 
-
-# Model 1: logit regression (roc = .62)
+# Model 1:Logistic Regression
 sink('/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/logit_m.txt')
 set.seed(2014)
 logistic_regression_model <- train(requester_received_pizza ~ ., data = train_training, method = 'glm', metric = 'ROC', trControl = train_control)
@@ -44,9 +41,8 @@ summary(logistic_regression_model)
 sink()
 logit_inf <- varImp(logistic_regression_model)
 save(logistic_regression_model, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/logit_model.Rdata')
-
-# Model 2: Granient Boost Trees (n.trees = 500, interaction.depth = 3, shrinkage = .01, roc = .68)
 sink('/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/gradient_boost_model.txt')
+#Model 2: GBT
 gradient_boost_tune = expand.grid(interaction.depth = seq(1, 9, 2),
                        n.trees = seq(500, 2000, 500),
                        shrinkage = c(.01, .1))
@@ -58,8 +54,6 @@ summary(gradient_boost_model)
 sink()
 gradient_boost_inf <- varImp(gradient_boost_model)
 save(gradient_boost_model, file = '/Users/zdai/Desktop/UT/random_acts_of_pizza_time/PredictPizza_models/gradient_boost_model.Rdata')
-
-
 present = resamples(list('Logistic regression' = logistic_regression_model, 'Gradient boost tree' = gradient_boost_model))
 parallelplot(present)
 
