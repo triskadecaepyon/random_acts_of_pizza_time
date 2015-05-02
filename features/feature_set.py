@@ -3,6 +3,9 @@ import abc
 import logging
 import sys
 import inspect
+import hashlib
+import json
+
 
 class FeatureSet:
     __metaclass__ = abc.ABCMeta
@@ -17,7 +20,22 @@ class FeatureSet:
         if verbose:
             self.logger.setLevel(logging.DEBUG)
 
-    def smartLoad(self, outputFilePath, **kwargs):
+    def smartLoad(self, outputFilePath = None, **kwargs):
+        if not outputFilePath:
+            outputFileDir = os.path.dirname(inspect.getsourcefile(self.__class__))
+            outputFilePath = os.path.join(outputFileDir, self.__class__.__name__) + ".fts" # fts -> _f_ea_t_ure _s_et
+
+        # ensures that we have unique files based on the kwargs
+        if kwargs:
+            md5Hasher = hashlib.md5()
+            kwargsAsJSON = json.dumps(kwargs, sort_keys = True)
+            md5Hasher.update(kwargsAsJSON)
+            kwargsAsHash = md5Hasher.hexdigest().upper()[:16]
+
+            (root, ext) = os.path.splitext(outputFilePath)
+            outputFilePath = '%s-%s%s' % (root, kwargsAsHash, ext)
+            outputFileDescriptionPath = '%s-%s-kwargs' % (root, kwargsAsHash) + '.txt'
+            
         outputFileExists = os.path.exists(outputFilePath)
         self.logger.debug("checking if output file exists: %s" % outputFileExists)
 
@@ -41,9 +59,17 @@ class FeatureSet:
                 # we will just return them here so we don't have to call _load() below.
                 # However, this is not a requirement of the _extract() method
                 features = self._extract(outputFile, **kwargs)
-                if features is not None:
-                    self.logger.debug("loading features <- %s" % outputFilePath)
-                    return features
+            
+            if kwargs:
+                self.logger.debug("creating description file-> %s" % outputFileDescriptionPath)
+                with open(outputFileDescriptionPath, 'w') as outputFile:
+                    outputFile.write(kwargsAsJSON)
+                    outputFile.write(os.linesep)
+
+            if features is not None:
+                self.logger.debug("loading features <- %s" % outputFilePath)
+                return features
+
         else:
             self.logger.debug("skipping feature extraction")
 
